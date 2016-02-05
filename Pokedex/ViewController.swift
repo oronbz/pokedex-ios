@@ -35,7 +35,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             musicPlayer = try AVAudioPlayer(contentsOfURL: NSURL(string: path)!)
             musicPlayer.prepareToPlay()
             musicPlayer.numberOfLoops = -1
-            musicPlayer.play()
+            musicPlayer.volume = 0.5
+            // musicPlayer.play()
         } catch let err as NSError {
             print(err.debugDescription)
         }
@@ -70,7 +71,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        
+        let poke = inSearchMode ? filteredPokemon[indexPath.row] : pokemon[indexPath.row]
+        performSegueWithIdentifier("PokemonDetailVC", sender: poke)
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -84,6 +86,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         return CGSize(width: 105, height: 105)
     }
+    
     @IBAction func musicBtnPressed(sender: UIButton!) {
         if musicPlayer.playing {
             musicPlayer.stop()
@@ -108,6 +111,16 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         view.endEditing(true)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "PokemonDetailVC" {
+            if let detailVC = segue.destinationViewController as? PokemonDetailVC {
+                if let poke = sender as? Pokemon {
+                    detailVC.pokemon = poke
+                }
+            }
+        }
     }
 }
 
