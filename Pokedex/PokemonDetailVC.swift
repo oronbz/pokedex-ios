@@ -28,17 +28,66 @@ class PokemonDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        nameLbl.text = pokemon.name
-        mainImg.image = UIImage(named: "\(pokemon.pokedexId)")
+        nameLbl.text = pokemon.name.capitalizedString
+        let img = UIImage(named: "\(pokemon.pokedexId)")
+        mainImg.image = img
+        currentEvoImg.image = img
         
-        pokemon.downloadPokemonDetails { (error) -> () in
+        setUIAlpha(0)
+        
+        pokemon.downloadPokemonDetails {
             // download is done
-            
+            self.updateUI()
         }
+    }
+    
+    func setUIAlpha(alpha: CGFloat) {
+        descriptionLbl.alpha = alpha
+        typeLbl.alpha = alpha
+        defenseLbl.alpha = alpha
+        heightLbl.alpha = alpha
+        weightLbl.alpha = alpha
+        pokedexIdLbl.alpha = alpha
+        baseAttackLbl.alpha = alpha
+        currentEvoImg.alpha = alpha
+        nextImgEvo.alpha = alpha
+        evoLbl.alpha = alpha
+    }
+    
+    func fadeInUI() {
+        UIView.animateWithDuration(0.4, delay: 0, options: .CurveEaseOut, animations: {
+                self.setUIAlpha(1)
+            }, completion: nil)
+    }
+    
+    func updateUI() {
+        descriptionLbl.text = pokemon.description
+        typeLbl.text = pokemon.type
+        defenseLbl.text = pokemon.defense
+        heightLbl.text = pokemon.height
+        weightLbl.text = pokemon.weight
+        pokedexIdLbl.text = "\(pokemon.pokedexId)"
+        baseAttackLbl.text = "\(pokemon.baseAttack)"
+        if pokemon.nextEvolutionId == "" {
+            evoLbl.text = "No Evolutions"
+            nextImgEvo.hidden = true
+        } else {
+            nextImgEvo.image = UIImage(named: pokemon.nextEvolutionId)
+            var str = "Next Evolution: \(pokemon.nextEvolutionName)"
+            if pokemon.nextEvolutionLevel != "" {
+                str += " - LVL \(pokemon.nextEvolutionLevel)"
+            }
+            evoLbl.text = str
+        }
+        fadeInUI()
     }
 
     @IBAction func backBtnClicked(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 
 }

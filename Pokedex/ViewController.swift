@@ -36,7 +36,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             musicPlayer.prepareToPlay()
             musicPlayer.numberOfLoops = -1
             musicPlayer.volume = 0.5
-            // musicPlayer.play()
+            musicPlayer.play()
         } catch let err as NSError {
             print(err.debugDescription)
         }
@@ -111,6 +111,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         view.endEditing(true)
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
